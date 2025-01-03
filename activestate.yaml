@@ -1,0 +1,79 @@
+project: https://platform.activestate.com/hak158-org/first-project?branch=main&commitID=2c344058-7fba-4dcb-bc55-0851a5bd4fbc
+config_version: 1
+scripts:
+  - name: activationMessage
+    language: python3
+    value: |
+      import textwrap
+      print(textwrap.dedent(""" 
+        Quick Start
+        ----------- 
+        * To add a package to your runtime, type "state install <package name>" 
+        * Learn more about how to use the State Tool, type "state learn" 
+      """))
+
+  - name: flake8
+    language: python3
+    value: |
+      import subprocess
+      result = subprocess.run(['flake8'], capture_output=True, text=True)
+      print(result.stdout)
+      if result.returncode != 0:
+          print(f"flake8 linting failed with return code {result.returncode}")
+          exit(result.returncode)
+
+  - name: pytest
+    language: python3
+    value: |
+      import subprocess
+      result = subprocess.run(['pytest'], capture_output=True, text=True)
+      print(result.stdout)
+      if result.returncode != 0:
+          print(f"pytest failed with return code {result.returncode}")
+          exit(result.returncode)
+
+  - name: pip
+    language: python3
+    value: |
+        import os
+        import subprocess
+        import sys
+
+        env = os.environ.copy()
+        env["ACTIVESTATE_SHIM"] = "pip"
+
+        project_path = os.path.join(r"${project.path()}", "activestate.yaml")
+
+        def configure_message():
+            print("To configure this shim edit the following file:\n" + project_path + "\n")
+
+        def mapcmds(mapping):
+            for fromCmd, toCmd in mapping.items():
+                if len(sys.argv) == 1:
+                    print("pip requires an argument. Try:\n pip [install, uninstall, list, show, search, help]")
+                    sys.exit()
+                if sys.argv[1] != fromCmd:
+                    continue
+
+                print(("Shimming command to: 'state %s'") % toCmd)
+                configure_message()
+
+                code = subprocess.call(["state", toCmd] + sys.argv[2:], env=env)
+                sys.exit(code)
+
+        mapcmds({
+            "help": "help",
+            "install": "install",
+            "uninstall": "uninstall",
+            "list": "packages",
+            "show": "info",
+            "search": "search",
+        })
+
+        print("Could not shim your command as it is not supported by the State Tool.\n" +
+              "Please check 'state --help' to find the best analog for the command you're trying to run.\n")
+        configure_message()
+
+events:
+  - name: ACTIVATE
+    value: python3.exe $scripts.activationMessage.path()
