@@ -23,7 +23,7 @@ Examples:
 
 
 Future Plans
-* Add CI/CD with Jenkins....
+* Add CI/CD with Jenkins.
 * Containerize the app with Docker.
 * Deploy it to AWS EKS.
 
