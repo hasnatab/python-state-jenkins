@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: calculator-app
+  labels:
+    app: calculator
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: calculator
+  template:
+    metadata:
+      labels:
+        app: calculator
+    spec:
+      containers:
+        - name: calculator
+          image: 778602549455.dkr.ecr.us-east-1.amazonaws.com/github-actions:latest
+          ports:
+            - containerPort: 8080
+          command: ["tail", "-f", "/dev/null"]
