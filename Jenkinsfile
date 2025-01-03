@@ -1,7 +1,6 @@
 pipeline {
-    agent {
-        label 'linux'
-    }
+    agent any
+
     environment {
         ACTIVESTATE_CLI_CACHEDIR = "${WORKSPACE}/.cache"
         ACTIVESTATE_API_KEY = credentials('ACTIVESTATE_API_KEY')
