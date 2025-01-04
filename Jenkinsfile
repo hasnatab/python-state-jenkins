@@ -24,7 +24,10 @@ pipeline {
         }
         stage('Activate ActiveState Runtime') {
             steps {
-                sh 'state pull'
+                sh '''
+                    source ~/.bashrc
+                    state pull
+                '''
             }
         }
         stage('Cache ActiveState CLI') {
