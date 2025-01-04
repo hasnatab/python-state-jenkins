@@ -19,7 +19,7 @@ pipeline {
         }
         stage('Install State Tool') {
             steps {
-                sh 'bash -c "sh <(curl -q https://platform.activestate.com/dl/cli/install.sh) -n"'
+                sh 'curl -q https://platform.activestate.com/dl/cli/install.sh | bash -s -n'
             }
         }
         stage('Activate ActiveState Runtime') {
