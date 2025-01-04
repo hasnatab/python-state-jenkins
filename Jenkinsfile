@@ -25,7 +25,7 @@ pipeline {
         stage('Activate ActiveState Runtime') {
             steps {
                 sh '''
-                    source ~/.bashrc
+                    export PATH="$HOME/.local/ActiveState/StateTool/release/bin:$PATH"
                     state pull
                 '''
             }
